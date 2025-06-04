@@ -1,0 +1,30 @@
+
+services:
+  debian-desktop:
+    image: debian-desktop  # 使用构建好的镜像
+    container_name: debian-desktop
+    restart: unless-stopped
+    environment:
+      - USER_NAME=user
+      - USER_PASSWORD=qweasd  # 从环境变量获取，默认值
+      - VNC_PASSWORD=qweasd         # 从环境变量获取，默认值
+      - DISPLAY=:1
+      - VNC_PORT=5901
+      - RDP_PORT=3389
+    ports:
+      - "20022:22"      # SSH
+      - "25901:5901"     # VNC
+      - "23389:3389"     # RDP
+    devices:
+      - "/dev/dri:/dev/dri"  # Intel核显直通
+    shm_size: "2gb"      # 共享内存大小
+    volumes:
+      - "/mnt:/mnt" 
+    networks:
+      bond4:
+        ipv4_address: 192.168.2.26
+
+networks:
+  bond4:
+    external:
+      name: bond4
